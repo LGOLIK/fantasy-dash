@@ -21,16 +21,16 @@
  text-decoration: underline;
 }
 
-#dashboard ul li {
+#team-nav ul li {
  display: inline;
  margin: 0 20px 0 0;
  margin-bottom: 130px;
 }
 
-#dashboard a {
+#team-nav a {
  text-decoration: none;
 }
 
-#dashboard a:hover {
+#team-nav a:hover {
  text-decoration: underline;
 }

@@ -15,7 +15,11 @@ apis.get('/teams', db.showTeams, function(req, res) {
   res.send(res.rows);
 })
 
-apis.get('/draftresults', db.showDraftResults, function(req, res) {
+apis.get('/draftresults', db.allDraftResults, function(req, res) {
+  res.send(res.rows);
+})
+
+apis.get('/draftresults/:id', db.teamDraftResults, function(req, res) {
   res.send(res.rows);
 })
 
