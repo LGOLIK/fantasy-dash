@@ -17,7 +17,6 @@ CREATE TABLE nfl_players (
 );
 
 CREATE TABLE draft_results (
-  draft_result_id SERIAL PRIMARY KEY UNIQUE,
   year integer,
   pick integer,
   round integer,
