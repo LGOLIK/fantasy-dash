@@ -1,0 +1,10 @@
+INSERT INTO fan_teams (team_name, manager, team_logo, is_commish) VALUES ('Morning Woodhead', 'LG', 'https://ct.yimg.com/cy/1600/24708521433_44eb14706b_192sq.jpg', true);
+INSERT INTO fan_teams (team_name, manager, team_logo, is_commish) VALUES ('Max ArtO', 'Art', 'http://l.yimg.com/dh/ap/fantasy/nfl/img/icon_10_100.png', false);
+INSERT INTO fan_teams (team_name, manager, team_logo, is_commish) VALUES ('I BILL-IEVE!!!', 'Stina', 'http://l.yimg.com/dh/ap/fantasy/nfl/img/icon_01_100.png', false);
+INSERT INTO fan_teams (team_name, manager, team_logo, is_commish) VALUES ('JT', 'JT', 'http://l.yimg.com/dh/ap/fantasy/nfl/img/icon_06_100.png', false);
+INSERT INTO fan_teams (team_name, manager, team_logo, is_commish) VALUES ('D Marcquali Rod-Qez@', 'Marc', 'http://l.yimg.com/dh/ap/fantasy/nfl/img/icon_12_100.png', false);
+INSERT INTO fan_teams (team_name, manager, team_logo, is_commish) VALUES ('Griv Em Hell', 'Chris', 'http://l.yimg.com/dh/ap/fantasy/nfl/img/icon_12_100.png', false);
+INSERT INTO fan_teams (team_name, manager, team_logo, is_commish) VALUES ('Brady-haters', 'Jackie', 'http://l.yimg.com/dh/ap/fantasy/nfl/img/icon_05_100.png', false);
+INSERT INTO fan_teams (team_name, manager, team_logo, is_commish) VALUES ('Go Big or Go Shoppin', 'Athenes', 'http://l.yimg.com/dh/ap/fantasy/nfl/img/icon_05_100.png', false);
+INSERT INTO fan_teams (team_name, manager, team_logo, is_commish) VALUES ('Demaryius Targaryen', 'Gino', 'http://l.yimg.com/dh/ap/fantasy/nfl/img/icon_11_100.png', false);
+INSERT INTO fan_teams (team_name, manager, team_logo, is_commish) VALUES ('Freight Train', 'Nick', 'http://l.yimg.com/dh/ap/fantasy/nfl/img/icon_02_100.png', false);

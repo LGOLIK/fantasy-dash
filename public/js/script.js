@@ -1,0 +1,8 @@
+'use strict';
+
+console.log('script.js loaded!');
+
+$(document).ready( () => {
+  
+
+})
