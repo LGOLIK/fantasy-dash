@@ -20,3 +20,17 @@
 #nav a:hover {
  text-decoration: underline;
 }
+
+#dashboard ul li {
+ display: inline;
+ margin: 0 20px 0 0;
+ margin-bottom: 130px;
+}
+
+#dashboard a {
+ text-decoration: none;
+}
+
+#dashboard a:hover {
+ text-decoration: underline;
+}

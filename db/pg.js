@@ -20,6 +20,17 @@ function showPlayers(req, res, next) {
   })
 }
 
+function showTeams(req, res, next) {
+  db.any(`SELECT * FROM fan_teams;`)
+  .then(function(data) {
+    res.rows = data;
+    next();
+  })
+  .catch(function(error){
+    console.error(error);
+  })
+}
+
 function showDraftResults(req, res, next) {
   db.any(`SELECT d.*, p.player_name, p.position, t.team_name, t.manager
     FROM draft_results AS d
@@ -40,4 +51,5 @@ function showDraftResults(req, res, next) {
 
 // export it
 module.exports.showPlayers = showPlayers;
+module.exports.showTeams = showTeams;
 module.exports.showDraftResults = showDraftResults;
