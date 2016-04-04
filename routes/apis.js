@@ -11,4 +11,8 @@ apis.get('/players', db.showPlayers, function(req, res) {
   res.send(res.rows);
 })
 
+apis.get('/draftresults', db.showDraftResults, function(req, res) {
+  res.send(res.rows);
+})
+
 module.exports = apis;
