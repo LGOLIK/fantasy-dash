@@ -52,10 +52,6 @@ function clickTeam() {
 
     // get the draft results route for a single team
     d3.json(`/apis/draftresults/${$teamID}`, function(data) {
-      // create array of json objects of each player name drafted
-      // let playersDrafted = _.indexBy(data, 'player_name');
-      // console.log(draftDataByPlayer);
-
       // call the method below
       showSingleTeamGraph(data);
 
@@ -105,14 +101,14 @@ function showSingleTeamGraph(data) {
     .domain(positions)
 
     // Note that height goes first due to the weird SVG coordinate system
-    // .range([height - margins.top - margins.bottom, 0]);
-    .rangeBands([0, width]);
+    .rangePoints([height - margins.top - margins.bottom, 0]);
+
 
   // we add the axes SVG component. At this point, this is just a placeholder. The actual axis will be added in a bit
   svg.append("g").attr("class", "x axis").attr("transform", "translate(0," + y.range()[0] + ")");
   svg.append("g").attr("class", "y axis");
 
-    // this is our X axis label. Nothing too special to see here.
+  // this is our X axis label. Nothing too special to see here.
   svg.append("text")
     .attr("fill", "#414241")
     .attr("text-anchor", "end")
@@ -121,8 +117,14 @@ function showSingleTeamGraph(data) {
     .text("Draft Rounds");
 
   // this is the actual definition of our x and y axes. The orientation refers to where the labels appear - for the x axis, below or above the line, and for the y axis, left or right of the line. Tick padding refers to how much space between the tick and the label. There are other parameters too - see https://github.com/mbostock/d3/wiki/SVG-Axes for more information
-  let xAxis = d3.svg.axis().scale(x).orient("bottom").tickPadding(2);
-  let yAxis = d3.svg.axis().scale(y).orient("left").tickPadding(2);
+  let xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .tickPadding(2);
+  let yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .tickPadding(2);
 
   // this is where we select the axis we created a few lines earlier. See how we select the axis item. in our svg we appended a g element with a x/y and axis class. To pull that back up, we do this svg select, then 'call' the appropriate axis object for rendering.
   svg.selectAll("g.y.axis").call(yAxis);
