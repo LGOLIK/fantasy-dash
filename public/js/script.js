@@ -81,8 +81,18 @@ function showSingleTeamGraph(data) {
     .domain(d3.extent(data, function (d) {
       return d.round;
     }))
+    .range([padding, width - margins.left - margins.right]);
 
-    .range([padding, width - padding]);
+  // y scale
+
+  // first get a unique list of the positions
+  let positions = _.uniq(_.map(data, function(value) {
+    return value.position
+  }));
+
+  let yScale = d3.scale.ordinal()
+    .domain(positions)
+    .rangePoints([height - margins.top - margins.bottom, 0]);
 
 
   // here are the axis definitions
@@ -92,6 +102,12 @@ function showSingleTeamGraph(data) {
     .scale(xScale)
     .orient('bottom')
     .ticks(20);
+
+  // y axis
+  let yAxis = d3.svg.axis()
+    .scale(yScale)
+    .orient('left')
+    .tickPadding(2);
 
   // create svg element and append it to the dashboard div
   let svg = d3.select('#dashboard')
@@ -105,9 +121,19 @@ function showSingleTeamGraph(data) {
     .attr('transform', 'translate(0,' + (height - padding + 5) + ')')
     .call(xAxis);
 
+  // create the y axis
+  svg.append('g')
+    .attr('class', 'y axis')
+    .attr('transform', 'translate(0,' + (padding + 5) + ')')
+    .call(yAxis);
+
   // select the x axis in the chart
-  svg.select('g.x.axis')
+  svg.selectAll('x.axis')
     .call(xAxis);
+
+  // select the y axis in the chart
+  svg.selectAll('y.axis')
+    .call(yAxis);
 
 
 
