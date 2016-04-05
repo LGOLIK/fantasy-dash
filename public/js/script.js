@@ -80,23 +80,25 @@ function showSingleTeamGraph(data) {
 
   // x scale
   let x = d3.scale.linear()
-    .domain(d3.extent(data, function (d) {
-    return d.round;
-  }))
+    .domain([0, d3.max(data, function(d) {
+      return d.round
+    })])
     // the range maps the domain to values from 0 to the width minus the left and right margins (used to space out the visualization)
-    .range([0, width - margins.left - margins.right]);
+    .range([0, width - margins.left - margins.right], .2);
 
   // get a unique list of player positions for the y axis
   let positions = _.uniq(_.map(data, function(value) {
     return value.position
   }))
 
+
   // y scale
   let y = d3.scale.ordinal()
     .domain(positions)
 
     // Note that height goes first due to the weird SVG coordinate system
-    .rangePoints([height - margins.top - margins.bottom, 0]);
+    .rangeRoundPoints([height - margins.top - margins.bottom, 0], .75);
+    // .rangeRoundBands([height - margins.top - margins.bottom, 0], .2);
 
   // this is the actual definition of our x and y axes. The orientation refers to where the labels appear - for the x axis, below or above the line, and for the y axis, left or right of the line. Tick padding refers to how much space between the tick and the label. There are other parameters too - see https://github.com/mbostock/d3/wiki/SVG-Axes for more information
   let xAxis = d3.svg.axis()
@@ -120,7 +122,7 @@ function showSingleTeamGraph(data) {
   // x axis
   svg.append('g')
     .attr('class', 'x axis')
-    .attr('transform', 'translate(0,' + y.range()[0] + ')');
+    .attr('transform', 'translate(0,' + (y.range()[0] + 21) + ')');
   // y axis
   svg.append('g').attr('class', 'y axis');
 
@@ -129,7 +131,7 @@ function showSingleTeamGraph(data) {
     .attr('fill', '#414241')
     .attr('text-anchor', 'end')
     .attr('x', width / 2)
-    .attr('y', height - 15)
+    .attr('y', height - 20)
     .text('Draft Rounds');
 
   // this is where we select the axis we created a few lines earlier. See how we select the axis item. in our svg we appended a g element with a x/y and axis class. To pull that back up, we do this svg select, then 'call' the appropriate axis object for rendering.
@@ -137,12 +139,12 @@ function showSingleTeamGraph(data) {
   svg.selectAll('g.x.axis').call(xAxis);
 
   // now, we can get down to the data part, and drawing stuff. We are telling D3 that all nodes (g elements with class node) will have data attached to them. The 'key' we use (to let D3 know the uniqueness of items) will be the name. Not usually a great key, but fine for this example.
-  let player = svg.selectAll('g.node').data(data, function (d) {
+  let node = svg.selectAll('g.node').data(data, function (d) {
     return d.player_name;
   });
 
   // we 'enter' the data, making the SVG group (to contain a circle and text) with a class node. This corresponds with what we told the data it should be above.
-  let playerGroup = player.enter().append('g').attr('class', 'node')
+  let main = node.enter().append('g').attr('class', 'node')
 
   // this is how we set the position of the items. Translate is an incredibly useful function for rotating and positioning items
   .attr('transform', function (d) {
@@ -150,17 +152,16 @@ function showSingleTeamGraph(data) {
   });
 
   // we add our first graphics element! A circle!
-  playerGroup.append('circle')
-    .attr('r', 5)
+  main.append('circle')
+    .attr('r', 10)
     .attr('class', 'dot')
     .style('fill', function (d) {
-      // Now each node will be coloured
-      // by the player's position
+      // Now each node will be coloured by the player's position
       return colors(d.position);
    });
 
   // now we add some text, so we can see what each item is.
-  playerGroup.append('text')
+  main.append('text')
     .style('text-anchor', 'middle')
     .attr('dy', -10)
     .text(function (d) {
