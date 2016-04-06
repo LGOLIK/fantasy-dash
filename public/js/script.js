@@ -138,7 +138,7 @@ function showSingleTeamGraph(data) {
       .attr("x", -height/2)
       .attr("y", -margins.bottom)
       .attr("dy", ".1em")
-      .style("text-anchor", "middle ")
+      .style("text-anchor", "middle")
       .text("Player Positions");
 
   // this is where we select the axis we created a few lines earlier. See how we select the axis item. in our svg we appended a g element with a x/y and axis class. To pull that back up, we do this svg select, then 'call' the appropriate axis object for rendering.
@@ -149,7 +149,7 @@ function showSingleTeamGraph(data) {
   svg.append('text')
     .text(`${data[0].team_name} 2015 Draft Results`)
     .attr('class', 'title')
-    .attr('text-anchor', 'center')
+    .attr('text-anchor', 'middle')
     .attr('x', width / 2);
 
 
