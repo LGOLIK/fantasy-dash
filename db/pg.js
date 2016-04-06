@@ -51,7 +51,7 @@ function allDraftResults(req, res, next) {
 
 // draft results for a single team
 function teamDraftResults(req, res, next) {
-  db.any(`SELECT d.*, p.player_name, p.position, t.team_name, t.manager
+  db.any(`SELECT d.*, p.player_name, p.position, t.team_name, t.team_logo, t.manager
     FROM draft_results AS d
       INNER JOIN nfl_players AS p
       ON p.nfl_player_id = d.player_id

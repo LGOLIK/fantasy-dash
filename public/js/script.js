@@ -65,13 +65,13 @@ function showSingleTeamGraph(data) {
   let margins = {
     'left': 50,
     'right': 50,
-    'top': 40,
+    'top': 200,
     'bottom': 40
   };
 
   // set the height and width of the graph
   let width = 960;
-  let height = 500;
+  let height = 700;
 
   // set the colors of the circles with a predefined d3 color scale
   let colors = d3.scale.category10();
@@ -135,7 +135,7 @@ function showSingleTeamGraph(data) {
     .attr('class', 'y axis')
     .append('text')
       .attr("transform", "rotate(-90)")
-      .attr("x", -height/2)
+      .attr("x", -height / 2)
       .attr("y", -margins.bottom)
       .attr("dy", ".1em")
       .style("text-anchor", "middle")
@@ -145,13 +145,26 @@ function showSingleTeamGraph(data) {
   svg.selectAll('g.y.axis').call(yAxis);
   svg.selectAll('g.x.axis').call(xAxis);
 
+  // this is the chart image
+  svg.append('image')
+    .attr('xlink:href', data[0].team_logo)
+    .attr('class', 'team-img')
+    .attr('height', 100)
+    .attr('width', 100)
+    .attr('x', width / 2)
+    .attr('y', 0 - (margins.top / 2));
+    // .attr('xlink:href', function(d) {
+      console.log(data[0].team_logo);
+      // return (data[0].team_logo)
+    // })
+
   // this is the chart label
   svg.append('text')
     .text(`${data[0].team_name} 2015 Draft Results`)
     .attr('class', 'title')
     .attr('text-anchor', 'middle')
-    .attr('x', width / 2);
-
+    .attr('x', width / 2)
+    .attr('y', 0 - (margins.top / 1.75));
 
   // this is our Y axis label. formatting can be added here
   svg.append('text')
