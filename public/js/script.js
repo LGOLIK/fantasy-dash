@@ -66,7 +66,7 @@ function clickTeam() {
 function showD3DraftResults(data) {
   // set the margins for each element
   let margin = {
-    'left': 30,
+    'left': 40,
     'right': 10,
     'top': 50,
     'bottom': 100
@@ -83,9 +83,7 @@ function showD3DraftResults(data) {
   let colors = ['#ffffd9', '#edf8b1', '#c7e9b4', '#7fcdbb', '#41b6c4', '#1d91c0', '#225ea8', '#253494']
 
   // get a unique list of player positions for the y axis
-  let positions = _.uniq(_.map(data, function(value) {
-    return value.position;
-  }));
+  let positions = ['QB', 'WR', 'RB', 'TE', 'DST', 'K'];
 
   // get a unique list of the rounds for the x axis
   let rounds = _.uniq(_.map(data, function(value) {
@@ -140,7 +138,7 @@ function showD3DraftResults(data) {
   // now add the data - must be a unique list of all data points
   let cards = svg.selectAll('.card')
     .data(data, function (d) {
-      return `rd: ${d.round}, ${d.position}: ${d.position_count}`
+      return `rd: ${d.round}, ${d.position_id}: ${d.position_count}`
     });
 
   // give each card element a title
@@ -152,7 +150,7 @@ function showD3DraftResults(data) {
       return (d.round - 1) * unitSize;
     })
     .attr('y', function(d) {
-      return d.position;
+      return (d.position_id - 1) * unitSize;
     })
     .attr('rx', 4)
     .attr('ry', 4)
@@ -165,115 +163,8 @@ function showD3DraftResults(data) {
   // set the color scale to transition in based on position count
   cards.transition().duration(1000)
     .style('fill', function (d) {
-      return colorScale(d.position_count)
-    })
-
-
-  // set the color scale
-  // let colors = d3.scale.category20();
-  //
-  // // set the x scale to the rounds
-  // let xScale = d3.scale.linear()
-  //   .domain([0, d3.max(data, function(d) {
-  //     return d.round;
-  //   })])
-  //   .range([0, width - margins.left - margins.right]);
-  //
-  // // set the y scale to the positions
-  // // get a unique list of player positions for the y axis
-  // let positions = _.uniq(_.map(data, function(value) {
-  //   return value.position;
-  // }));
-  //
-  // // y scale
-  // let yScale = d3.scale.ordinal()
-  //   .domain(positions)
-  //   // Note that height goes first due to the weird SVG coordinate system
-  //   .rangeRoundPoints([height - margins.top - margins.bottom, 0], .75);
-  //
-  // // set the x axis
-  // let xAxis = d3.svg.axis()
-  //   .scale(xScale)
-  //   .orient('bottom')
-  //   .ticks(20);
-  //
-  // // set the y axis
-  // let yAxis = d3.svg.axis()
-  //   .scale(yScale)
-  //   .orient('left')
-  //   .ticks(10);
-  //
-  // // set the svg and append it to the dashboard element
-  // let svg = d3.select('#dashboard')
-  //   .append('svg')
-  //   .attr('width', width)
-  //   .attr('height', height)
-  //   // append the grid to it
-  //   .append('g')
-  //   .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
-  //
-  // // add the x axis and label to the grid
-  // svg.append('g')
-  //   .attr('class', 'x axis')
-  //   .attr('transform', 'translate(0,' + (yScale.range()[0] + 21) + ')')
-  //   .append('text')
-  //     .attr('fill', '#414241')
-  //     .attr('text-anchor', 'end')
-  //     .attr('x', width / 2)
-  //     .attr('y', margins.bottom)
-  //     // .attr('dy', '.52em')
-  //     .text('Draft Rounds');
-  //
-  // // add the y axis and label to the grid
-  // svg.append('g')
-  //   .attr('class', 'y axis')
-  //   .append('text')
-  //     .attr("transform", "rotate(-90)")
-  //     .attr("x", -height / 2)
-  //     .attr("y", -margins.bottom)
-  //     .attr("dy", ".1em")
-  //     .style("text-anchor", "end")
-  //     .text("Player Positions");
-  //
-  // // now select the x axis and y axis
-  // svg.selectAll('g.x.axis').call(xAxis);
-  // svg.selectAll('g.y.axis').call(yAxis);
-  //
-  // // now, we can get down to the data part, and drawing stuff.
-  // // We are telling D3 that all nodes (g elements with class node) will have data attached to them.
-  // // The 'key' we use (to let D3 know the uniqueness of items) will be the name. Not usually a great key, but fine for this example.
-  // let node = svg.selectAll('g.node')
-  //   .data(data, function (d) {
-  //     return d.players;
-  //   });
-  //
-  // // we 'enter' the data, making the SVG group (to contain a circle and text) with a class node. This corresponds with what we told the data it should be above.
-  // let dataElement = node.enter()
-  //   .append('g')
-  //   .attr('class', 'node')
-  //   // this is how we set the position of the items. Translate is an incredibly useful function for rotating and positioning items
-  //   .attr('transform', function (d) {
-  //     return 'translate(' + xScale(d.round) + ',' + yScale(d.position) + ')';
-  //   });
-  //
-  // // add a circle
-  // dataElement.append('circle')
-  //   .attr('r', function (d) {
-  //     return d.position_count * 3;
-  //   })
-  //   .attr('class', 'dot')
-  //   .style('fill', function (d) {
-  //     // Now each node will be coloured by the player's position
-  //     return colors(d.position_count);
-  //  });
-  //
-  // // now we add some text, so we can see what each item is.
-  // dataElement.append('text')
-  //   .style('text-anchor', 'middle')
-  //   // .attr('dy', -10)
-  //   .text(function (d) {
-  //     return d.position_count;
-  //  });
+      return colorScale(d.position_count);
+    });
 
 }
 

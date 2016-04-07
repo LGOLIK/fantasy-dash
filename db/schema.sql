@@ -13,6 +13,7 @@ CREATE TABLE nfl_players (
   nfl_player_id SERIAL PRIMARY KEY UNIQUE,
   player_name text,
   position text,
+  position_id integer,
   nfl_team text,
   uniform_num integer,
   img_url text
