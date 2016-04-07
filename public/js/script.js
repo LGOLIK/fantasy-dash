@@ -10,7 +10,7 @@ $(document).ready( () => {
     $dashboard.empty();
 
     d3.json('/apis/draftresults', function(data) {
-      // showD3DraftResults(data);
+      showD3DraftResults(data);
     });
   });
 
@@ -89,8 +89,8 @@ function showD3DraftResults(data) {
   // set the y scale to the positions
   // get a unique list of player positions for the y axis
   let positions = _.uniq(_.map(data, function(value) {
-    return value.position
-  }))
+    return value.position;
+  }));
 
   // y scale
   let yScale = d3.scale.ordinal()
@@ -151,7 +151,7 @@ function showD3DraftResults(data) {
   // The 'key' we use (to let D3 know the uniqueness of items) will be the name. Not usually a great key, but fine for this example.
   let node = svg.selectAll('g.node')
     .data(data, function (d) {
-      return d.team_name;
+      return d.players;
     });
 
   // we 'enter' the data, making the SVG group (to contain a circle and text) with a class node. This corresponds with what we told the data it should be above.
@@ -165,21 +165,22 @@ function showD3DraftResults(data) {
 
   // add a circle
   dataElement.append('circle')
-    .attr('r', 30)
+    .attr('r', function (d) {
+      return d.position_count * 3;
+    })
     .attr('class', 'dot')
     .style('fill', function (d) {
       // Now each node will be coloured by the player's position
-      return colors(d.team_name);
+      return colors(d.position_count);
    });
 
   // now we add some text, so we can see what each item is.
   dataElement.append('text')
     .style('text-anchor', 'middle')
-    .attr('dy', -10)
+    // .attr('dy', -10)
     .text(function (d) {
-      return d.pick;
+      return d.position_count;
    });
-
 
 }
 

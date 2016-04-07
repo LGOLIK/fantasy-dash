@@ -39,7 +39,8 @@ function allDraftResults(req, res, next) {
     ON p.nfl_player_id = d.player_id
     INNER JOIN fan_teams AS t
     ON t.fan_team_id = d.fan_team_id
-  GROUP BY d.round, p.position;`)
+  GROUP BY d.round, p.position
+  ORDER BY d.round;`)
   .then(function(data) {
     res.rows = data;
     next();
