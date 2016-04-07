@@ -10,12 +10,15 @@ $(document).ready( () => {
     $dashboard.empty();
 
     d3.json('/apis/draftresults', function(data) {
-      showD3DraftResults(data);
+      // showD3DraftResults(data);
     });
   });
 
   $('#team-draft-results').on('click', () => {
     event.stopProbagation;
+    let $dashboard = $('#dashboard');
+    $dashboard.empty();
+
     let $teamNav = $('#team-nav');
     let $ul = $('<ul>');
     $teamNav.empty();
@@ -30,14 +33,6 @@ $(document).ready( () => {
     });
   })
 })
-
-// function showD3DraftResults() {
-//   event.stopProbagation;
-//
-//   d3.json('/apis/draftresults', function(data) {
-//     console.log(data[0]);
-//   })
-// }
 
 function renderTeams(data, $ul) {
   data.forEach( (el) => {
@@ -151,6 +146,40 @@ function showD3DraftResults(data) {
   svg.selectAll('g.x.axis').call(xAxis);
   svg.selectAll('g.y.axis').call(yAxis);
 
+  // now, we can get down to the data part, and drawing stuff.
+  // We are telling D3 that all nodes (g elements with class node) will have data attached to them.
+  // The 'key' we use (to let D3 know the uniqueness of items) will be the name. Not usually a great key, but fine for this example.
+  let node = svg.selectAll('g.node')
+    .data(data, function (d) {
+      return d.team_name;
+    });
+
+  // we 'enter' the data, making the SVG group (to contain a circle and text) with a class node. This corresponds with what we told the data it should be above.
+  let dataElement = node.enter()
+    .append('g')
+    .attr('class', 'node')
+    // this is how we set the position of the items. Translate is an incredibly useful function for rotating and positioning items
+    .attr('transform', function (d) {
+      return 'translate(' + xScale(d.round) + ',' + yScale(d.position) + ')';
+    });
+
+  // add a circle
+  dataElement.append('circle')
+    .attr('r', 30)
+    .attr('class', 'dot')
+    .style('fill', function (d) {
+      // Now each node will be coloured by the player's position
+      return colors(d.team_name);
+   });
+
+  // now we add some text, so we can see what each item is.
+  dataElement.append('text')
+    .style('text-anchor', 'middle')
+    .attr('dy', -10)
+    .text(function (d) {
+      return d.pick;
+   });
+
 
 }
 
@@ -257,20 +286,23 @@ function showSingleTeamGraph(data) {
     .attr('y', 0 - (margins.top / 1.75));
 
   // now, we can get down to the data part, and drawing stuff. We are telling D3 that all nodes (g elements with class node) will have data attached to them. The 'key' we use (to let D3 know the uniqueness of items) will be the name. Not usually a great key, but fine for this example.
-  let node = svg.selectAll('g.node').data(data, function (d) {
-    return d.player_name;
-  });
+  let node = svg.selectAll('g.node')
+    .data(data, function (d) {
+      return d.player_name;
+    });
 
   // we 'enter' the data, making the SVG group (to contain a circle and text) with a class node. This corresponds with what we told the data it should be above.
-  let main = node.enter().append('g').attr('class', 'node')
+  let dataElement = node.enter()
+    .append('g')
+    .attr('class', 'node')
 
-  // this is how we set the position of the items. Translate is an incredibly useful function for rotating and positioning items
-  .attr('transform', function (d) {
-    return 'translate(' + x(d.round) + ',' + y(d.position) + ')';
-  });
+    // this is how we set the position of the items. Translate is an incredibly useful function for rotating and positioning items
+    .attr('transform', function (d) {
+      return 'translate(' + x(d.round) + ',' + y(d.position) + ')';
+    });
 
-  // we add our first graphics element! A circle!
-  main.append('circle')
+  // add a circle element
+  dataElement.append('circle')
     .attr('r', 10)
     .attr('class', 'dot')
     .style('fill', function (d) {
@@ -279,11 +311,10 @@ function showSingleTeamGraph(data) {
    });
 
   // now we add some text, so we can see what each item is.
-  main.append('text')
+  dataElement.append('text')
     .style('text-anchor', 'middle')
     .attr('dy', -10)
     .text(function (d) {
-      // this shouldn't be a surprising statement.
       return d.player_name;
    });
 }

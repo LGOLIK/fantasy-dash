@@ -33,13 +33,13 @@ function showTeams(req, res, next) {
 
 // draft results for all teams
 function allDraftResults(req, res, next) {
-  db.any(`SELECT d.*, p.player_name, p.position, t.team_name, t.manager
-    FROM draft_results AS d
-      INNER JOIN nfl_players AS p
-      ON p.nfl_player_id = d.player_id
-      INNER JOIN fan_teams AS t
-      ON t.fan_team_id = d.fan_team_id
-    ORDER BY d.pick;`)
+  db.any(`SELECT d.round, p.position, count(t.team_name) as position_count, array_agg(t.team_name) as team_names, array_agg(p.player_name) as players, array_agg(t.fan_team_id) as team_ids
+  FROM draft_results AS d
+    INNER JOIN nfl_players AS p
+    ON p.nfl_player_id = d.player_id
+    INNER JOIN fan_teams AS t
+    ON t.fan_team_id = d.fan_team_id
+  GROUP BY d.round, p.position;`)
   .then(function(data) {
     res.rows = data;
     next();
