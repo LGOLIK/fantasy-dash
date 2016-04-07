@@ -137,6 +137,36 @@ function showD3DraftResults(data) {
         return ((i >= 7 && i <= 16) ? 'roundLabel mono axis axis-rounds' : 'roundLabel mono axis');
       });
 
+  // now add the data - must be a unique list of all data points
+  let cards = svg.selectAll('.card')
+    .data(data, function (d) {
+      return `rd: ${d.round}, ${d.position}: ${d.position_count}`
+    });
+
+  // give each card element a title
+  cards.append('title');
+
+  // each element is a rectangle
+  cards.enter().append('rect')
+    .attr('x', function(d) {
+      return (d.round - 1) * unitSize;
+    })
+    .attr('y', function(d) {
+      return d.position;
+    })
+    .attr('rx', 4)
+    .attr('ry', 4)
+    .attr('class', 'unit bordered')
+    .attr('width', unitSize)
+    .attr('height', unitSize)
+    // initially set each card with the first color
+    .style('fill', colors[0]);
+
+  // set the color scale to transition in based on position count
+  cards.transition().duration(1000)
+    .style('fill', function (d) {
+      return colorScale(d.position_count)
+    })
 
 
   // set the color scale
