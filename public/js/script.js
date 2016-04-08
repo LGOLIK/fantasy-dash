@@ -9,6 +9,9 @@ $(document).ready( () => {
     let $dashboard = $('#dashboard');
     $dashboard.empty();
 
+    let $teamNav = $('#team-nav');
+    $teamNav.empty();
+
     d3.json('/apis/draftresults', function(data) {
       showD3DraftResults(data);
     });
@@ -90,7 +93,6 @@ function showD3DraftResults(data) {
     return value.round;
   }));
 
-
   // set the color scale with the count of each position
   let colorScale = d3.scale.quantile()
     .domain([0, buckets - 1, d3.max(data, function (d) {
@@ -165,6 +167,43 @@ function showD3DraftResults(data) {
     .style('fill', function (d) {
       return colorScale(d.position_count);
     });
+
+  cards.select('title').text(function(d) { return d.position_count; });
+
+  cards.exit().remove();
+
+  // add the legend for the colors
+  // let legend = svg.selectAll('.legend')
+  //   .data([0].concat(colorScale.quantiles()), function (d) {
+  //     return d
+  //   });
+  //
+  // legend.enter().append('g')
+  //   .attr('class', 'legend')
+  //
+  // legend.append('rect')
+  //   .attr('x', function (d, i) {
+  //     return legendUnitSize * i;
+  //   })
+  //   .attr('y', height)
+  //   .attr('width', legendUnitSize)
+  //   .attr('height', unitSize / 2)
+  //   .style('fill', function (d, i) {
+  //     return colors[i];
+  //   });
+  //
+  // legend.append('text')
+  //   .attr('class', 'mono')
+  //   .text(function (d) {
+  //     return `≥ ${d}`;
+  //   })
+  //   .attr('x', function (d, i) {
+  //     return legendUnitSize * i;
+  //   })
+  //   .attr('y', height + unitSize);
+  //
+  // legend.exit().remove();
+
 
 }
 
