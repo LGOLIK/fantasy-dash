@@ -3,11 +3,30 @@
 console.log('script.js loaded!');
 
 $(document).ready( () => {
-  $('#draft-results').on('click', showD3DraftResults);
-  // $('#team-draft-results').on('click', renderTeams)
+  // load the main draft chart when the page first loads
+  d3.json('/apis/draftresults', function(data) {
+    showD3DraftResults(data);
+  });
+
+  $('#draft-results').on('click', function(event) {
+    event.stopProbagation;
+
+    let $dashboard = $('#dashboard');
+    $dashboard.empty();
+
+    let $teamNav = $('#team-nav');
+    $teamNav.empty();
+
+    d3.json('/apis/draftresults', function(data) {
+      showD3DraftResults(data);
+    });
+  });
 
   $('#team-draft-results').on('click', () => {
     event.stopProbagation;
+    let $dashboard = $('#dashboard');
+    $dashboard.empty();
+
     let $teamNav = $('#team-nav');
     let $ul = $('<ul>');
     $teamNav.empty();
@@ -22,14 +41,6 @@ $(document).ready( () => {
     });
   })
 })
-
-function showD3DraftResults() {
-  event.stopProbagation;
-
-  d3.json('/apis/draftresults', function(data) {
-    console.log(data[0]);
-  })
-}
 
 function renderTeams(data, $ul) {
   data.forEach( (el) => {
@@ -60,18 +71,164 @@ function clickTeam() {
 
 }
 
+function showD3DraftResults(data) {
+  // set the margins for each element
+  let margin = {
+    'left': 40,
+    'right': 10,
+    'top': 100,
+    'bottom': 100
+  }
+
+  // set the width and height
+  let width = 960 - margin.left - margin.right;
+  let height = 600 - margin.top - margin.bottom;
+
+  // set the size of various elements in the chart
+  let unitSize = Math.floor(width / 15); // 15 rounds
+  let legendUnitSize = unitSize*2;
+  let buckets = 6;
+  let colors = ['#ffffd9', '#c7e9b4', '#41b6c4', '#225ea8', '#081d58'];
+
+  // get a unique list of player positions for the y axis
+  let positions = ['QB', 'WR', 'RB', 'TE', 'DST', 'K'];
+
+  // get a unique list of the rounds for the x axis
+  let rounds = _.uniq(_.map(data, function(value) {
+    return value.round;
+  }));
+
+  // set the color scale with the count of each position
+  let colorScale = d3.scale.quantile()
+    .domain([0, buckets - 1, d3.max(data, function (d) {
+      return d.position_count;
+    })])
+    .range(colors);
+
+  // establish the svg, append it to the dashboard
+  let svg = d3.select('#dashboard').append('svg')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+    .append('g')
+    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+  // give the chart a title
+  svg.append('text')
+    .text('Golik Ballz Draft Results Heat Map')
+    .attr('class', 'title')
+    .attr('x', 0)
+    .attr('y', 0 - (margin.top / 2))
+    .attr('text-anchor', 'start');
+
+
+  // add the y axis and labels to the grid
+  let positionLabel = svg.selectAll('.positionLabel')
+    .data(positions)
+    .enter().append('text')
+      .text(function (d) { return d })
+      .attr('x', 0)
+      .attr('y', function (d, i) {
+        return i * unitSize;
+      })
+      .style('text-anchor', 'end')
+      .attr('transform', `translate(-7, ${unitSize / 1.5})`)
+      .attr('class', 'positionLabel mono axis axis-positions');
+
+  // add the x axis and labels to the grid
+  let roundLabel = svg.selectAll('.roundLabel')
+    .data(rounds)
+    .enter().append('text')
+      .text(function (d) { return d })
+      .attr('x', function (d, i) {
+        return i * unitSize;
+      })
+      .attr('y', 0)
+      .style('text-anchor', 'middle')
+      .attr('transform', `translate(${unitSize / 2}, -7)`)
+      .attr('class', 'roundLabel mono axis axis-rounds');
+
+  // now add the data - must be a unique list of all data points
+  let cards = svg.selectAll('.card')
+    .data(data, function (d) {
+      return `rd: ${d.round}, ${d.position_id}: ${d.position_count}`
+    });
+
+  // give each card element a title
+  cards.append('title');
+
+  // each element is a rectangle
+  cards.enter().append('rect')
+    .attr('x', function(d) {
+      return (d.round - 1) * unitSize;
+    })
+    .attr('y', function(d) {
+      return (d.position_id - 1) * unitSize;
+    })
+    .attr('rx', 4)
+    .attr('ry', 4)
+    .attr('class', 'unit bordered')
+    .attr('width', unitSize)
+    .attr('height', unitSize)
+    // initially set each card with the first color
+    .style('fill', colors[0]);
+
+  // set the color scale to transition in based on position count
+  cards.transition().duration(1000)
+    .style('fill', function (d) {
+      return colorScale(d.position_count);
+    });
+
+  cards.select('title').text(function(d) { return d.position_count; });
+
+  cards.exit().remove();
+
+  // add the legend for the colors
+  let legend = svg.selectAll('.legend')
+    .data([0].concat(colorScale.quantiles()), function (d) {
+      return d
+    });
+
+  legend.enter().append('g')
+    .attr('class', 'legend')
+
+  legend.append('rect')
+    .attr('x', function (d, i) {
+      return legendUnitSize * i;
+    })
+    .attr('y', height)
+    .attr('width', legendUnitSize)
+    .attr('height', unitSize / 2)
+    .style('fill', function (d, i) {
+      return colors[i];
+    });
+
+  legend.append('text')
+    .attr('class', 'mono')
+    .text(function (d) {
+      return `≥ ${Math.round(d)}`;
+    })
+    .attr('x', function (d, i) {
+      return legendUnitSize * i;
+    })
+    .attr('y', height + unitSize);
+
+  legend.exit().remove();
+
+
+}
+
 function showSingleTeamGraph(data) {
   // set the margins - gives space around each of the items
   let margins = {
     'left': 50,
     'right': 50,
-    'top': 40,
+    'top': 200,
     'bottom': 40
   };
 
   // set the height and width of the graph
   let width = 960;
-  let height = 500;
+  let height = 700;
 
   // set the colors of the circles with a predefined d3 color scale
   let colors = d3.scale.category10();
@@ -135,7 +292,7 @@ function showSingleTeamGraph(data) {
     .attr('class', 'y axis')
     .append('text')
       .attr("transform", "rotate(-90)")
-      .attr("x", -height/2)
+      .attr("x", -height / 2)
       .attr("y", -margins.bottom)
       .attr("dy", ".1em")
       .style("text-anchor", "middle")
@@ -145,37 +302,41 @@ function showSingleTeamGraph(data) {
   svg.selectAll('g.y.axis').call(yAxis);
   svg.selectAll('g.x.axis').call(xAxis);
 
+  // this is the chart image
+  svg.append('image')
+    .attr('xlink:href', data[0].team_logo)
+    .attr('class', 'team-img')
+    .attr('height', 100)
+    .attr('width', 100)
+    .attr('x', width / 2)
+    .attr('y', 0 - (margins.top / 2));
+
   // this is the chart label
   svg.append('text')
     .text(`${data[0].team_name} 2015 Draft Results`)
     .attr('class', 'title')
     .attr('text-anchor', 'middle')
-    .attr('x', width / 2);
-
-
-  // this is our Y axis label. formatting can be added here
-  svg.append('text')
-    .attr('fill', '#414241')
-    .attr('text-anchor', 'middle')
     .attr('x', width / 2)
-    .attr('y', height - 20)
-    .text('Draft Rounds');
+    .attr('y', 0 - (margins.top / 1.75));
 
   // now, we can get down to the data part, and drawing stuff. We are telling D3 that all nodes (g elements with class node) will have data attached to them. The 'key' we use (to let D3 know the uniqueness of items) will be the name. Not usually a great key, but fine for this example.
-  let node = svg.selectAll('g.node').data(data, function (d) {
-    return d.player_name;
-  });
+  let node = svg.selectAll('g.node')
+    .data(data, function (d) {
+      return d.player_name;
+    });
 
   // we 'enter' the data, making the SVG group (to contain a circle and text) with a class node. This corresponds with what we told the data it should be above.
-  let main = node.enter().append('g').attr('class', 'node')
+  let dataElement = node.enter()
+    .append('g')
+    .attr('class', 'node')
 
-  // this is how we set the position of the items. Translate is an incredibly useful function for rotating and positioning items
-  .attr('transform', function (d) {
-    return 'translate(' + x(d.round) + ',' + y(d.position) + ')';
-  });
+    // this is how we set the position of the items. Translate is an incredibly useful function for rotating and positioning items
+    .attr('transform', function (d) {
+      return 'translate(' + x(d.round) + ',' + y(d.position) + ')';
+    });
 
-  // we add our first graphics element! A circle!
-  main.append('circle')
+  // add a circle element
+  dataElement.append('circle')
     .attr('r', 10)
     .attr('class', 'dot')
     .style('fill', function (d) {
@@ -184,11 +345,10 @@ function showSingleTeamGraph(data) {
    });
 
   // now we add some text, so we can see what each item is.
-  main.append('text')
+  dataElement.append('text')
     .style('text-anchor', 'middle')
     .attr('dy', -10)
     .text(function (d) {
-      // this shouldn't be a surprising statement.
       return d.player_name;
    });
 }

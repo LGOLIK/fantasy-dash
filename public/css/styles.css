@@ -34,3 +34,26 @@
 #team-nav a:hover {
  text-decoration: underline;
 }
+
+.title {
+  font-size: 20pt;
+}
+
+rect.bordered {
+  stroke: #E6E6E6;
+  stroke-width:2px;
+}
+
+text.mono {
+  font-size: 9pt;
+  font-family: Consolas, courier;
+  fill: #aaa;
+}
+
+text.axis-rounds {
+  fill: #000;
+}
+
+text.axis-positions {
+  fill: #000;
+}
