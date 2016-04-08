@@ -77,7 +77,7 @@ function showD3DraftResults(data) {
 
   // set the width and height
   let width = 960 - margin.left - margin.right;
-  let height = 430 - margin.top - margin.bottom;
+  let height = 550 - margin.top - margin.bottom;
 
   // set the size of various elements in the chart
   let unitSize = Math.floor(width / 15); // 15 rounds
@@ -117,7 +117,7 @@ function showD3DraftResults(data) {
         return i * unitSize;
       })
       .style('text-anchor', 'end')
-      .attr('transform', `translate(-6, ${unitSize / 1.5})`)
+      .attr('transform', `translate(-7, ${unitSize / 1.5})`)
       .attr('class',  function (d, i) {
         return ((i >= 0 && i <= 4) ? 'positionLabel mono axis axis-positions' : 'positionLabel mono axis');
       });
@@ -132,7 +132,7 @@ function showD3DraftResults(data) {
       })
       .attr('y', 0)
       .style('text-anchor', 'middle')
-      .attr('transform', `translate(${unitSize / 2}, -6)`)
+      .attr('transform', `translate(${unitSize / 2}, -7)`)
       .attr('class',  function (d, i) {
         return ((i >= 7 && i <= 16) ? 'roundLabel mono axis axis-rounds' : 'roundLabel mono axis');
       });
@@ -173,36 +173,36 @@ function showD3DraftResults(data) {
   cards.exit().remove();
 
   // add the legend for the colors
-  // let legend = svg.selectAll('.legend')
-  //   .data([0].concat(colorScale.quantiles()), function (d) {
-  //     return d
-  //   });
-  //
-  // legend.enter().append('g')
-  //   .attr('class', 'legend')
-  //
-  // legend.append('rect')
-  //   .attr('x', function (d, i) {
-  //     return legendUnitSize * i;
-  //   })
-  //   .attr('y', height)
-  //   .attr('width', legendUnitSize)
-  //   .attr('height', unitSize / 2)
-  //   .style('fill', function (d, i) {
-  //     return colors[i];
-  //   });
-  //
-  // legend.append('text')
-  //   .attr('class', 'mono')
-  //   .text(function (d) {
-  //     return `≥ ${d}`;
-  //   })
-  //   .attr('x', function (d, i) {
-  //     return legendUnitSize * i;
-  //   })
-  //   .attr('y', height + unitSize);
-  //
-  // legend.exit().remove();
+  let legend = svg.selectAll('.legend')
+    .data([0].concat(colorScale.quantiles()), function (d) {
+      return d
+    });
+
+  legend.enter().append('g')
+    .attr('class', 'legend')
+
+  legend.append('rect')
+    .attr('x', function (d, i) {
+      return legendUnitSize * i;
+    })
+    .attr('y', height)
+    .attr('width', legendUnitSize)
+    .attr('height', unitSize / 2)
+    .style('fill', function (d, i) {
+      return colors[i];
+    });
+
+  legend.append('text')
+    .attr('class', 'mono')
+    .text(function (d) {
+      return `≥ ${d}`;
+    })
+    .attr('x', function (d, i) {
+      return legendUnitSize * i;
+    })
+    .attr('y', height + unitSize);
+
+  legend.exit().remove();
 
 
 }
