@@ -76,13 +76,13 @@ function showD3DraftResults(data) {
   let margin = {
     'left': 40,
     'right': 10,
-    'top': 50,
+    'top': 100,
     'bottom': 100
   }
 
   // set the width and height
   let width = 960 - margin.left - margin.right;
-  let height = 550 - margin.top - margin.bottom;
+  let height = 600 - margin.top - margin.bottom;
 
   // set the size of various elements in the chart
   let unitSize = Math.floor(width / 15); // 15 rounds
@@ -111,6 +111,15 @@ function showD3DraftResults(data) {
     .attr('height', height + margin.top + margin.bottom)
     .append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
+
+  // give the chart a title
+  svg.append('text')
+    .text('Golik Ballz Draft Results Heat Map')
+    .attr('class', 'title')
+    .attr('x', 0)
+    .attr('y', 0 - (margin.top / 2))
+    .attr('text-anchor', 'start');
+
 
   // add the y axis and labels to the grid
   let positionLabel = svg.selectAll('.positionLabel')
