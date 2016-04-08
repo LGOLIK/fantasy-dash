@@ -150,7 +150,9 @@ function showD3DraftResults(data) {
   // now add the data - must be a unique list of all data points
   let cards = svg.selectAll('.card')
     .data(data, function (d) {
-      return `rd: ${d.round}, ${d.position_id}: ${d.position_count}`
+      // console.log(d.team_names);
+      return d.team_names;
+      // return `rd: ${d.round}, ${d.position_id}: ${d.position_count}`
     });
 
   // create a div for the tooltip of teams - this is the starting point.
@@ -185,6 +187,8 @@ function showD3DraftResults(data) {
       return colorScale(d.position_count);
     });
 
+  cards.select('title').text(function(d) { return d.position_count; });
+
     // add tooltip detail on click
   cards.on('click', function (d) {
     div.transition()
@@ -193,17 +197,17 @@ function showD3DraftResults(data) {
     div.transition()
       .duration(200)
       .style('opacity', .9);
-    div.html(`<a href="">${d.team_names[0]}</a>`)
+    div.data(function () {
+      console.log(d);
+      let team_names = d.team_names;
+      return d.team_names;
+    })
+    div.html(function() {
+      `<a href="">${d.team_names}</a>`
+    })
       .style('left', `${(d3.event.pageX)}px`)
       .style('top', `${(d3.event.pageY)}px`);
-    // div.html(`<a href="">${d.team_names}</a>`)
-    //   .style('left', (parseInt(d3.select(this).attr('rx')) + $('rect').offsetLeft) + 'px')
-    //   .style('top', (parseInt(d3.select(this).attr('ry')) + $('rect').offsetTop) + 'px')
   })
-
-
-
-  cards.select('title').text(function(d) { return d.position_count; });
 
   cards.exit().remove();
 
