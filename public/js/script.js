@@ -153,6 +153,13 @@ function showD3DraftResults(data) {
       return `rd: ${d.round}, ${d.position_id}: ${d.position_count}`
     });
 
+  // create a div for the tooltip of teams - this is the starting point.
+  // data is defined on each card
+  let div = d3.select('#dashboard')
+    .append('div') // declare the tooltip
+    .attr('class', 'tooltip')
+    .style('opacity', 0);
+
   // give each card element a title
   cards.append('title');
 
@@ -177,6 +184,24 @@ function showD3DraftResults(data) {
     .style('fill', function (d) {
       return colorScale(d.position_count);
     });
+
+    // add tooltip detail on click
+  cards.on('click', function (d) {
+    div.transition()
+      .duration(500)
+      .style('opacity', 0);
+    div.transition()
+      .duration(200)
+      .style('opacity', .9);
+    div.html(`<a href="">${d.team_names[0]}</a>`)
+      .style('left', `${(d3.event.pageX)}px`)
+      .style('top', `${(d3.event.pageY)}px`);
+    // div.html(`<a href="">${d.team_names}</a>`)
+    //   .style('left', (parseInt(d3.select(this).attr('rx')) + $('rect').offsetLeft) + 'px')
+    //   .style('top', (parseInt(d3.select(this).attr('ry')) + $('rect').offsetTop) + 'px')
+  })
+
+
 
   cards.select('title').text(function(d) { return d.position_count; });
 
