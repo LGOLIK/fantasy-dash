@@ -1064,7 +1064,7 @@ let positions = _.uniq(_.map(dataset, function(value) {
 console.log(positions);
 
 let rounds = _.uniq(_.map(dataset, function(value) {
-  return `R${value.round}`;
+  return value.round;
 }));
 
 console.log(rounds);

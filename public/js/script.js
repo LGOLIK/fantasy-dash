@@ -3,6 +3,11 @@
 console.log('script.js loaded!');
 
 $(document).ready( () => {
+  // load the main draft chart when the page first loads
+  d3.json('/apis/draftresults', function(data) {
+    showD3DraftResults(data);
+  });
+
   $('#draft-results').on('click', function(event) {
     event.stopProbagation;
 
@@ -82,8 +87,8 @@ function showD3DraftResults(data) {
   // set the size of various elements in the chart
   let unitSize = Math.floor(width / 15); // 15 rounds
   let legendUnitSize = unitSize*2;
-  let buckets = 9;
-  let colors = ['#ffffd9', '#edf8b1', '#c7e9b4', '#7fcdbb', '#41b6c4', '#1d91c0', '#225ea8', '#253494']
+  let buckets = 6;
+  let colors = ['#ffffd9', '#c7e9b4', '#41b6c4', '#225ea8', '#081d58'];
 
   // get a unique list of player positions for the y axis
   let positions = ['QB', 'WR', 'RB', 'TE', 'DST', 'K'];
@@ -118,9 +123,7 @@ function showD3DraftResults(data) {
       })
       .style('text-anchor', 'end')
       .attr('transform', `translate(-7, ${unitSize / 1.5})`)
-      .attr('class',  function (d, i) {
-        return ((i >= 0 && i <= 4) ? 'positionLabel mono axis axis-positions' : 'positionLabel mono axis');
-      });
+      .attr('class', 'positionLabel mono axis axis-positions');
 
   // add the x axis and labels to the grid
   let roundLabel = svg.selectAll('.roundLabel')
@@ -133,9 +136,7 @@ function showD3DraftResults(data) {
       .attr('y', 0)
       .style('text-anchor', 'middle')
       .attr('transform', `translate(${unitSize / 2}, -7)`)
-      .attr('class',  function (d, i) {
-        return ((i >= 7 && i <= 16) ? 'roundLabel mono axis axis-rounds' : 'roundLabel mono axis');
-      });
+      .attr('class', 'roundLabel mono axis axis-rounds');
 
   // now add the data - must be a unique list of all data points
   let cards = svg.selectAll('.card')
@@ -195,7 +196,7 @@ function showD3DraftResults(data) {
   legend.append('text')
     .attr('class', 'mono')
     .text(function (d) {
-      return `≥ ${d}`;
+      return `≥ ${Math.round(d)}`;
     })
     .attr('x', function (d, i) {
       return legendUnitSize * i;
