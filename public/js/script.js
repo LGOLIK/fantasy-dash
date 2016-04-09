@@ -77,7 +77,7 @@ function showD3DraftResults(data) {
   let unitSize = Math.floor(width / 15); // 15 rounds
   let legendUnitSize = unitSize*2;
   let buckets = 6;
-  let colors = ['#ffffd9', '#c7e9b4', '#41b6c4', '#225ea8', '#081d58'];
+    let colors = ['#ffffd9', '#c7e9b4', '#41b6c4', '#225ea8', '#081d58'];
 
   // get a unique list of player positions for the y axis
   let positions = ['QB', 'WR', 'RB', 'TE', 'DST', 'K'];
@@ -342,6 +342,12 @@ function showSingleTeamGraph(data) {
       return d.player_name;
     });
 
+  // create a div to store pop up card detail
+  let div = d3.select('#dashboard')
+    .append('div')
+    .attr('class', 'tooltip')
+    .style('opacity', 0);
+
   // we 'enter' the data, making the SVG group (to contain a circle and text) with a class node. This corresponds with what we told the data it should be above.
   let dataElement = node.enter()
     .append('g')
@@ -363,6 +369,25 @@ function showSingleTeamGraph(data) {
     .style('fill', function (d) {
       return colors(d.position);
     })
+
+  // add pop up card detail to the circle element, for when you mouse over it
+  dataElement.on('mouseover', function (d) {
+    div.transition()
+      .duration(500)
+      .style('opacity', 0);
+    div.transition()
+      .duration(200)
+      .style('opacity', .9);
+    div.html(
+      `<img src="${d.img_url}"></img>`
+    )
+  });
+
+  dataElement.on('mouseout', function(d) {
+    div.transition()
+      .duration(500)
+      .style("opacity", 0);
+  })
 
   // now we add some text, so we can see what each item is.
   // dataElement.append('text')
