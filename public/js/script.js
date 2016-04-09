@@ -350,16 +350,19 @@ function showSingleTeamGraph(data) {
     // this is how we set the position of the items. Translate is an incredibly useful function for rotating and positioning items
     .attr('transform', function (d) {
       return 'translate(' + x(d.round) + ',' + y(d.position) + ')';
-    });
+    })
+    .style('fill', '#F5F5F5');
 
   // add a circle element
   dataElement.append('circle')
     .attr('r', 20)
-    .attr('class', 'dot')
+    .attr('class', 'dot');
+
+  // add transitions on the circle element
+  dataElement.transition().duration(1000)
     .style('fill', function (d) {
-      // Now each node will be coloured by the player's position
       return colors(d.position);
-   });
+    })
 
   // now we add some text, so we can see what each item is.
   // dataElement.append('text')
