@@ -318,14 +318,14 @@ function showSingleTeamGraph(data) {
 
   // y axis and label
   svg.append('g')
-    .attr('class', 'y axis')
-    .append('text')
-      .attr("transform", "rotate(-90)")
-      .attr("x", -height / 2)
-      .attr("y", -margins.bottom)
-      .attr("dy", ".1em")
-      .style("text-anchor", "middle")
-      .text("Player Positions");
+    .attr('class', 'y axis');
+    // .append('text')
+    //   .attr('transform', 'rotate(-90)')
+    //   .attr('x', -height / 2)
+    //   .attr('y', -margins.bottom)
+    //   .attr('dy', '.1em')
+    //   .style('text-anchor', 'middle')
+    //   .text('Player Positions');
 
   // this is where we select the axis we created a few lines earlier. See how we select the axis item. in our svg we appended a g element with a x/y and axis class. To pull that back up, we do this svg select, then 'call' the appropriate axis object for rendering.
   svg.selectAll('g.y.axis').call(yAxis);
@@ -374,10 +374,10 @@ function showSingleTeamGraph(data) {
    });
 
   // now we add some text, so we can see what each item is.
-  dataElement.append('text')
-    .style('text-anchor', 'middle')
-    .attr('dy', -10)
-    .text(function (d) {
-      return d.player_name;
-   });
+  // dataElement.append('text')
+  //   .style('text-anchor', 'middle')
+  //   .attr('dy', -10)
+  //   .text(function (d) {
+  //     return d.player_name;
+  //  });
 }
