@@ -14,7 +14,7 @@ body {
 #nav ul li {
  display: inline;
  margin: 0 20px 0 0;
- margin-bottom: 130px;
+ margin-bottom: 50px;
 }
 
 #nav a {
@@ -22,20 +22,6 @@ body {
 }
 
 #nav a:hover {
- text-decoration: underline;
-}
-
-#team-nav ul li {
- display: inline;
- margin: 0 20px 0 0;
- margin-bottom: 130px;
-}
-
-#team-nav a {
- text-decoration: none;
-}
-
-#team-nav a:hover {
  text-decoration: underline;
 }
 
@@ -75,14 +61,14 @@ div.tooltip {
 }
 
 g.axis {
-    fill: none;
-    stroke: #AAA;
-    stroke-width: 1px;
+  fill: none;
+  stroke: #AAA;
+  stroke-width: 1px;
 }
 
 text {
-    stroke: none;
-    fill: #666666;
-    font-size: .6em;
-    font-family:"Helvetica Neue"
+  stroke: none;
+  fill: #666666;
+  font-size: .6em;
+  font-family:"Helvetica Neue"
 }

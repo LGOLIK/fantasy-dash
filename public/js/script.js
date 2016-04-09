@@ -36,9 +36,9 @@ function renderTeams(data) {
   data.forEach( (el) => {
     let teamName = el.team_name;
     let teamID = el.fan_team_id;
-    let $liTeam = $('<li class="team-draft-results">').text(`${teamName}`).attr('id', teamID);
-    let $a = $('<a href="#">');
-    $navList.append($a.append($liTeam));
+    let $liTeam = $('<li>');
+    let $a = $('<a class="team-draft-results" href="#">').text(`${teamName}`).attr('id', teamID);
+    $navList.append($liTeam.append($a));
   })
 }
 
@@ -241,17 +241,18 @@ function showSingleTeamGraph(data) {
     'left': 50,
     'right': 50,
     'top': 80,
-    'bottom': 40
+    'bottom': 100
   };
 
   // set the height and width of the graph
   let width = 800;
-  let height = 500;
+  let height = 430;
 
-  // set the colors of the circles with a predefined d3 color scale
-  let colors = d3.scale.category10();
 
   // set the scales
+
+  // set the colors of the circles with a predefined d3 color scale
+  let colors = d3.scale.category20();
 
   // x scale
   let x = d3.scale.linear()
@@ -262,9 +263,7 @@ function showSingleTeamGraph(data) {
     .range([0, width - margins.left - margins.right]);
 
   // get a unique list of player positions for the y axis
-  let positions = _.uniq(_.map(data, function(value) {
-    return value.position
-  }))
+  let positions = ['K', 'DST', 'TE', 'RB', 'WR', 'QB'];
 
 
   // y scale
@@ -272,7 +271,7 @@ function showSingleTeamGraph(data) {
     .domain(positions)
 
     // Note that height goes first due to the weird SVG coordinate system
-    .rangeRoundPoints([height - margins.top - margins.bottom, 0], .75);
+    .rangeRoundPoints([height - margins.top - margins.bottom, 0]);
 
   // this is the actual definition of our x and y axes. The orientation refers to where the labels appear - for the x axis, below or above the line, and for the y axis, left or right of the line. Tick padding refers to how much space between the tick and the label. There are other parameters too - see https://github.com/mbostock/d3/wiki/SVG-Axes for more information
   let xAxis = d3.svg.axis()
@@ -296,7 +295,7 @@ function showSingleTeamGraph(data) {
   // x axis and label
   svg.append('g')
     .attr('class', 'x axis')
-    .attr('transform', 'translate(0,' + (y.range()[0] + 21) + ')')
+    .attr('transform', 'translate(0,' + (y.range()[0] + 25) + ')')
     .append('text')
       .attr('fill', '#414241')
       .attr('text-anchor', 'end')
@@ -355,7 +354,7 @@ function showSingleTeamGraph(data) {
 
   // add a circle element
   dataElement.append('circle')
-    .attr('r', 10)
+    .attr('r', 20)
     .attr('class', 'dot')
     .style('fill', function (d) {
       // Now each node will be coloured by the player's position
