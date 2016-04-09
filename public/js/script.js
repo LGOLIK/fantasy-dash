@@ -8,52 +8,42 @@ $(document).ready( () => {
     showD3DraftResults(data);
   });
 
+
+  // get links for each of the teams
+  $.get('/apis/teams')
+    .done( (data) => {
+      renderTeams(data);
+      // make sure the click event handler is after all the teams are loaded
+      clickTeam();
+  });
+
+
   $('#draft-results').on('click', function(event) {
     event.stopProbagation;
 
     let $dashboard = $('#dashboard');
     $dashboard.empty();
 
-    let $teamNav = $('#team-nav');
-    $teamNav.empty();
-
     d3.json('/apis/draftresults', function(data) {
       showD3DraftResults(data);
     });
   });
 
-  $('#team-draft-results').on('click', () => {
-    event.stopProbagation;
-    let $dashboard = $('#dashboard');
-    $dashboard.empty();
-
-    let $teamNav = $('#team-nav');
-    let $ul = $('<ul>');
-    $teamNav.empty();
-    $teamNav.append('<h4>Select a team to see its draft results!</h4>');
-    $teamNav.append($ul);
-
-    $.get('apis/teams')
-      .done( (data) => {
-        renderTeams(data, $ul);
-        // make sure the click event handler is after all the teams are loaded
-        clickTeam();
-    });
-  })
 })
 
-function renderTeams(data, $ul) {
+function renderTeams(data) {
+  let $navList = $('#nav-list');
   data.forEach( (el) => {
     let teamName = el.team_name;
     let teamID = el.fan_team_id;
-    let $liTeam = $('<li class="team-list">').text(`${teamName}`).attr('id', teamID);
+    let $liTeam = $('<li class="team-draft-results">').text(`${teamName}`).attr('id', teamID);
     let $a = $('<a href="#">');
-    $ul.append($a.append($liTeam));
+    $navList.append($a.append($liTeam));
   })
 }
 
 function clickTeam() {
-  $('.team-list').on('click', (event) => {
+  $('.team-draft-results').on('click', (event) => {
     event.stopProbagation;
 
     let $teamID = $(event.target).attr('id');
@@ -68,7 +58,6 @@ function clickTeam() {
 
     }); // end of d3.json
   }); // end of click handler
-
 }
 
 function showD3DraftResults(data) {
@@ -251,13 +240,13 @@ function showSingleTeamGraph(data) {
   let margins = {
     'left': 50,
     'right': 50,
-    'top': 200,
+    'top': 80,
     'bottom': 40
   };
 
   // set the height and width of the graph
-  let width = 960;
-  let height = 700;
+  let width = 800;
+  let height = 500;
 
   // set the colors of the circles with a predefined d3 color scale
   let colors = d3.scale.category10();
@@ -335,17 +324,17 @@ function showSingleTeamGraph(data) {
   svg.append('image')
     .attr('xlink:href', data[0].team_logo)
     .attr('class', 'team-img')
-    .attr('height', 100)
-    .attr('width', 100)
-    .attr('x', width / 2)
-    .attr('y', 0 - (margins.top / 2));
+    .attr('height', 50)
+    .attr('width', 50)
+    .attr('x', width - margins.right)
+    .attr('y', 0 - (margins.top / 1.75));
 
   // this is the chart label
   svg.append('text')
     .text(`${data[0].team_name} 2015 Draft Results`)
     .attr('class', 'title')
-    .attr('text-anchor', 'middle')
-    .attr('x', width / 2)
+    .attr('text-anchor', 'start')
+    .attr('x', 0)
     .attr('y', 0 - (margins.top / 1.75));
 
   // now, we can get down to the data part, and drawing stuff. We are telling D3 that all nodes (g elements with class node) will have data attached to them. The 'key' we use (to let D3 know the uniqueness of items) will be the name. Not usually a great key, but fine for this example.

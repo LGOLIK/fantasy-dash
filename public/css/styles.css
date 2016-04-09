@@ -3,6 +3,10 @@
  margin-top: 50px;
 }
 
+body {
+  background-color: #F5F5F5;
+}
+
 #nav {
  margin: 13px 0 0 0;
 }
@@ -68,4 +72,17 @@ div.tooltip {
   background: lightsteelblue;
   border: 0px;
   border-radius: 8px;
+}
+
+g.axis {
+    fill: none;
+    stroke: #AAA;
+    stroke-width: 1px;
+}
+
+text {
+    stroke: none;
+    fill: #666666;
+    font-size: .6em;
+    font-family:"Helvetica Neue"
 }
