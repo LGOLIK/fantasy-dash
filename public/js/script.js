@@ -380,14 +380,16 @@ function showSingleTeamGraph(data) {
       .style('opacity', .9);
     div.html(
       `<img src="${d.img_url}"></img>`
-    )
+      )
+      .style('left', `${(width + margins.right)}px`)
+      .style('bottom', `${(height - margins.top)}px`);
   });
 
   dataElement.on('mouseout', function(d) {
     div.transition()
       .duration(500)
       .style("opacity", 0);
-  })
+  });
 
   // now we add some text, so we can see what each item is.
   // dataElement.append('text')
