@@ -186,16 +186,21 @@ function showD3DraftResults(data) {
     div.transition()
       .duration(200)
       .style('opacity', .9);
-    div.data(function () {
-      console.log(d);
-      let team_names = d.team_names;
-      return d.team_names;
-    })
     div.html(function() {
-      `<a href="">${d.team_names}</a>`
+      let teams = d.team_names;
+      let players = d.players;
+      let teamsHTML = '';
+
+      _.each(teams, function(team, i) {
+        console.log(team);
+        teamsHTML += `<p>${team} picked ${players[i]}</p>`;
+      });
+      // return `<a href="">${team}</a>`
+      return teamsHTML;
+
     })
-      .style('left', `${(d3.event.pageX)}px`)
-      .style('top', `${(d3.event.pageY)}px`);
+    .style('left', `${(width + margin.right + margin.left)}px`)
+    .style('bottom', `${(height - margin.top - margin.bottom)}px`);
   })
 
   cards.exit().remove();
@@ -289,8 +294,7 @@ function showSingleTeamGraph(data) {
     .append('g')
     .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')');
 
-  // we add the axes to the SVG component. At this point, this is just a placeholder. The actual axis will be added in a bit
-  // x axis and label
+  // we add the axes to the SVG component, placeholder
   svg.append('g')
     .attr('class', 'x axis')
     .attr('transform', 'translate(0,' + (y.range()[0] + 25) + ')')
@@ -307,7 +311,7 @@ function showSingleTeamGraph(data) {
     .attr('class', 'y axis');
 
 
-  // this is where we select the axis we created a few lines earlier. See how we select the axis item. in our svg we appended a g element with a x/y and axis class. To pull that back up, we do this svg select, then 'call' the appropriate axis object for rendering.
+  // this is where we select the axis we created a few lines earlier.
   svg.selectAll('g.y.axis').call(yAxis);
   svg.selectAll('g.x.axis').call(xAxis);
 
