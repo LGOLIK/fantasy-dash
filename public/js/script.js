@@ -148,7 +148,7 @@ function showD3DraftResults(data) {
   // data is defined on each card
   let div = d3.select('#dashboard')
     .append('div') // declare the tooltip
-    .attr('class', 'tooltip')
+    .attr('class', 'summary-tooltip')
     .style('opacity', 0);
 
   // give each card element a title
@@ -187,20 +187,34 @@ function showD3DraftResults(data) {
       .duration(200)
       .style('opacity', .9);
     div.html(function() {
+      // define the teams, players in the data
       let teams = d.team_names;
       let players = d.players;
       let teamsHTML = '';
 
+      // iterate on each team to generate the html content
       _.each(teams, function(team, i) {
         console.log(team);
-        teamsHTML += `<p>${team} picked ${players[i]}</p>`;
+        teamsHTML += `<tr><td>${d.round}</td><td>${d.position}</td><td>${team}</td><td>${players[i]}</td></tr>`;
       });
-      // return `<a href="">${team}</a>`
-      return teamsHTML;
 
+      // render the html content
+      return `<table class="u-full-width">
+        <thead>
+          <tr>
+            <th>Round</th>
+            <th>Position</th>
+            <th>Team</th>
+            <th>Player</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${teamsHTML}
+        </tbody>
+      </table>`
     })
-    .style('left', `${(width + margin.right + margin.left)}px`)
-    .style('bottom', `${(height - margin.top - margin.bottom)}px`);
+    .style('left', `${(width)}px`)
+    .style('bottom', `${(height)}px`);
   })
 
   cards.exit().remove();

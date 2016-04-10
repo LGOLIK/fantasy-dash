@@ -86,6 +86,18 @@ div.tooltip {
   box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 }
 
+div.summary-tooltip {
+  position: absolute;
+  text-align: center;
+  width: 150px;
+  height: 200px;
+  padding: 2px;
+  background: #DCDCDC;
+  border: 0px;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
 g.axis {
   fill: none;
   stroke: #AAA;
