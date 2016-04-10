@@ -70,8 +70,8 @@ function showD3DraftResults(data) {
   }
 
   // set the width and height
-  let width = 960 - margin.left - margin.right;
-  let height = 600 - margin.top - margin.bottom;
+  let width = 800 - margin.left - margin.right;
+  let height = 525 - margin.top - margin.bottom;
 
   // set the size of various elements in the chart
   let unitSize = Math.floor(width / 15); // 15 rounds
@@ -232,7 +232,6 @@ function showD3DraftResults(data) {
 
   legend.exit().remove();
 
-
 }
 
 function showSingleTeamGraph(data) {
@@ -247,7 +246,6 @@ function showSingleTeamGraph(data) {
   // set the height and width of the graph
   let width = 800;
   let height = 430;
-
 
   // set the scales
 
@@ -307,13 +305,7 @@ function showSingleTeamGraph(data) {
   // y axis and label
   svg.append('g')
     .attr('class', 'y axis');
-    // .append('text')
-    //   .attr('transform', 'rotate(-90)')
-    //   .attr('x', -height / 2)
-    //   .attr('y', -margins.bottom)
-    //   .attr('dy', '.1em')
-    //   .style('text-anchor', 'middle')
-    //   .text('Player Positions');
+
 
   // this is where we select the axis we created a few lines earlier. See how we select the axis item. in our svg we appended a g element with a x/y and axis class. To pull that back up, we do this svg select, then 'call' the appropriate axis object for rendering.
   svg.selectAll('g.y.axis').call(yAxis);
@@ -348,12 +340,13 @@ function showSingleTeamGraph(data) {
     .attr('class', 'tooltip')
     .style('opacity', 0);
 
-  // we 'enter' the data, making the SVG group (to contain a circle and text) with a class node. This corresponds with what we told the data it should be above.
+  // we 'enter' the data, making the SVG group
+  // (to contain a circle and text) with a class node.
   let dataElement = node.enter()
     .append('g')
     .attr('class', 'node')
 
-    // this is how we set the position of the items. Translate is an incredibly useful function for rotating and positioning items
+    // set the position of the items
     .attr('transform', function (d) {
       return 'translate(' + x(d.round) + ',' + y(d.position) + ')';
     })
@@ -361,7 +354,7 @@ function showSingleTeamGraph(data) {
 
   // add a circle element
   dataElement.append('circle')
-    .attr('r', 20)
+    .attr('r', 23)
     .attr('class', 'dot');
 
   // add transitions on the circle element
@@ -376,26 +369,22 @@ function showSingleTeamGraph(data) {
       .duration(500)
       .style('opacity', 0);
     div.transition()
-      .duration(200)
+      .duration(500)
       .style('opacity', .9);
     div.html(
-      `<img src="${d.img_url}"></img>`
+      `<br/><img class="card-img" src="${d.img_url}"></img>
+      <div class="card player">${d.player_name}</div>
+      <div class="card-details">${d.nfl_team}</div>
+      <div class="card-details">${d.uniform_num}</div>`
       )
-      .style('left', `${(width + margins.right)}px`)
-      .style('bottom', `${(height - margins.top)}px`);
+      .style('left', `${(width)}px`)
+      .style('top', `${(height - margins.top - margins.bottom)}px`);
   });
 
   dataElement.on('mouseout', function(d) {
     div.transition()
-      .duration(500)
+      .duration(1000)
       .style("opacity", 0);
   });
 
-  // now we add some text, so we can see what each item is.
-  // dataElement.append('text')
-  //   .style('text-anchor', 'middle')
-  //   .attr('dy', -10)
-  //   .text(function (d) {
-  //     return d.player_name;
-  //  });
 }
