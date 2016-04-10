@@ -65,12 +65,12 @@ function showD3DraftResults(data) {
   let margin = {
     'left': 40,
     'right': 10,
-    'top': 100,
+    'top': 80,
     'bottom': 100
   }
 
   // set the width and height
-  let width = 800 - margin.left - margin.right;
+  let width = 700 - margin.left - margin.right;
   let height = 525 - margin.top - margin.bottom;
 
   // set the size of various elements in the chart
@@ -377,8 +377,8 @@ function showSingleTeamGraph(data) {
       <div class="card-details">${d.nfl_team}</div>
       <div class="card-details">${d.uniform_num}</div>`
       )
-      .style('left', `${(width)}px`)
-      .style('top', `${(height - margins.top - margins.bottom)}px`);
+      .style('left', `${(width + margins.right + margins.left)}px`)
+      .style('bottom', `${(height - margins.top - margins.bottom)}px`);
   });
 
   dataElement.on('mouseout', function(d) {
