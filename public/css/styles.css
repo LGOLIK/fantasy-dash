@@ -1,12 +1,36 @@
 
-.container {
+/*.container {
  margin-top: 50px;
-}
+}*/
 
 body {
   color: #666666;
   background-color: #F5F5F5;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+#nav ul {
+  margin: 0;
+  padding: 0;
+  max-width: 200px;
+  list-style-type: none;
+}
+
+#nav ul li a {
+  text-decoration: none;
+  color: #F5F5F5;
+  padding: 5px 5px;
+  background-color: rgb(34, 94, 168);
+  display:block;
+}
+
+#nav ul li a:visited {
+  color: #F5F5F5;
+}
+
+#nav ul li a:hover, #nav ul li .current {
+  color: white;
+  background-color: #4682B4;
 }
 
 /*#nav {
@@ -72,5 +96,5 @@ text {
   stroke: none;
   fill: #666666;
   font-size: .6em;
-  font-family:"Helvetica Neue"
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
