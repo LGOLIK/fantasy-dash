@@ -65,7 +65,7 @@ function clickTeam() {
 function showD3DraftResults(data) {
   // set the margins for each element
   let margin = {
-    'left': 40,
+    'left': 50,
     'right': 10,
     'top': 80,
     'bottom': 100
