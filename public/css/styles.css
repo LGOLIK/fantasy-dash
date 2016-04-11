@@ -1,16 +1,46 @@
 
-.container {
+/*.container {
  margin-top: 50px;
+}*/
+
+body {
+  color: #666666;
+  background-color: #F5F5F5;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-#nav {
+#nav ul {
+  margin: 0;
+  padding: 0;
+  width: 170px;
+  list-style-type: none;
+}
+
+#nav ul li a {
+  text-decoration: none;
+  color: #F5F5F5;
+  padding: 5px 5px;
+  background-color: rgb(34, 94, 168);
+  display:block;
+}
+
+#nav ul li a:visited {
+  color: #F5F5F5;
+}
+
+#nav ul li a:hover, #nav ul li .current {
+  color: white;
+  background-color: #4682B4;
+}
+
+/*#nav {
  margin: 13px 0 0 0;
 }
 
 #nav ul li {
  display: inline;
  margin: 0 20px 0 0;
- margin-bottom: 130px;
+ margin-bottom: 50px;
 }
 
 #nav a {
@@ -19,21 +49,7 @@
 
 #nav a:hover {
  text-decoration: underline;
-}
-
-#team-nav ul li {
- display: inline;
- margin: 0 20px 0 0;
- margin-bottom: 130px;
-}
-
-#team-nav a {
- text-decoration: none;
-}
-
-#team-nav a:hover {
- text-decoration: underline;
-}
+}*/
 
 .title {
   font-size: 20pt;
@@ -56,4 +72,44 @@ text.axis-rounds {
 
 text.axis-positions {
   fill: #000;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 150px;
+  height: 200px;
+  padding: 2px;
+  background: #DCDCDC;
+  border: 0px;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+div.summary-tooltip {
+  position: absolute;
+  text-align: center;
+  width: 375px;
+  padding: 2px;
+  background: #DCDCDC;
+  border: 0px;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.card-title {
+  font-size: 20px;
+}
+
+g.axis {
+  fill: none;
+  stroke: #AAA;
+  stroke-width: 1px;
+}
+
+text {
+  stroke: none;
+  fill: #666666;
+  font-size: .6em;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
