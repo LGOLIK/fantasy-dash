@@ -8,7 +8,6 @@ $(document).ready( () => {
     showD3DraftResults(data);
   });
 
-
   // get links for each of the teams
   $.get('/apis/teams')
     .done( (data) => {
@@ -17,7 +16,7 @@ $(document).ready( () => {
       clickTeam();
   });
 
-
+  // event handler for getting the summary draft results
   $('#draft-results').on('click', function(event) {
     event.stopProbagation;
 
@@ -31,6 +30,7 @@ $(document).ready( () => {
 
 })
 
+// render teams (jquery)
 function renderTeams(data) {
   let $navList = $('#nav-list');
   data.forEach( (el) => {
@@ -42,6 +42,7 @@ function renderTeams(data) {
   })
 }
 
+// click team link event handler
 function clickTeam() {
   $('.team-draft-results').on('click', (event) => {
     event.stopProbagation;
@@ -60,6 +61,7 @@ function clickTeam() {
   }); // end of click handler
 }
 
+// summary draft results chart
 function showD3DraftResults(data) {
   // set the margins for each element
   let margin = {
@@ -77,7 +79,7 @@ function showD3DraftResults(data) {
   let unitSize = Math.floor(width / 15); // 15 rounds
   let legendUnitSize = unitSize*2;
   let buckets = 6;
-    let colors = ['#ffffd9', '#c7e9b4', '#41b6c4', '#225ea8', '#081d58'];
+  let colors = ['#ffffd9', '#c7e9b4', '#41b6c4', '#225ea8', '#081d58'];
 
   // get a unique list of player positions for the y axis
   let positions = ['QB', 'WR', 'RB', 'TE', 'DST', 'K'];
@@ -109,7 +111,6 @@ function showD3DraftResults(data) {
     .attr('y', 0 - (margin.top / 2))
     .attr('text-anchor', 'start');
 
-
   // add the y axis and labels to the grid
   let positionLabel = svg.selectAll('.positionLabel')
     .data(positions)
@@ -139,9 +140,8 @@ function showD3DraftResults(data) {
   // now add the data - must be a unique list of all data points
   let cards = svg.selectAll('.card')
     .data(data, function (d) {
-      // console.log(d.team_names);
-      return d.team_names;
-      // return `rd: ${d.round}, ${d.position_id}: ${d.position_count}`
+      // return d.team_names;
+      return `rd: ${d.round}, ${d.position_id}: ${d.position_count}`
     });
 
   // create a div for the tooltip of teams - this is the starting point.
@@ -178,8 +178,8 @@ function showD3DraftResults(data) {
 
   cards.select('title').text(function(d) { return d.position_count; });
 
-    // add tooltip detail on click
-  cards.on('click', function (d) {
+  // add tooltip detail on click
+  cards.on('mouseover', function (d) {
     div.transition()
       .duration(500)
       .style('opacity', 0);
@@ -194,16 +194,16 @@ function showD3DraftResults(data) {
 
       // iterate on each team to generate the html content
       _.each(teams, function(team, i) {
-        console.log(team);
-        teamsHTML += `<tr><td>${d.round}</td><td>${d.position}</td><td>${team}</td><td>${players[i]}</td></tr>`;
+        teamsHTML += `<tr><td>${d.round}</td>
+        <td>${team}</td>
+        <td>${players[i]}</td></tr>`;
       });
 
       // render the html content
-      return `<table class="u-full-width">
+      return `<table>
         <thead>
           <tr>
-            <th>Round</th>
-            <th>Position</th>
+            <th>Rd</th>
             <th>Team</th>
             <th>Player</th>
           </tr>
@@ -213,9 +213,21 @@ function showD3DraftResults(data) {
         </tbody>
       </table>`
     })
-    .style('left', `${(width)}px`)
-    .style('bottom', `${(height)}px`);
-  })
+    // set the height to length of team names
+    .style('height', function() {
+      return d.team_names.length;
+    })
+
+    .style('left', `${(d3.event.pageX - 200)}px`)
+    .style('top', `${(d3.event.pageY)}px`);
+  }); // end up mousover event handler
+
+  // on mouseout
+  cards.on('mouseout', function(d) {
+    div.transition()
+      .duration(1000)
+      .style("opacity", 0);
+  });
 
   cards.exit().remove();
 
@@ -251,7 +263,8 @@ function showD3DraftResults(data) {
 
   legend.exit().remove();
 
-}
+} // end of function showD3DraftResults(data)
+
 
 function showSingleTeamGraph(data) {
   // set the margins - gives space around each of the items
@@ -281,7 +294,6 @@ function showSingleTeamGraph(data) {
 
   // get a unique list of player positions for the y axis
   let positions = ['K', 'DST', 'TE', 'RB', 'WR', 'QB'];
-
 
   // y scale
   let y = d3.scale.ordinal()
@@ -324,7 +336,6 @@ function showSingleTeamGraph(data) {
   svg.append('g')
     .attr('class', 'y axis');
 
-
   // this is where we select the axis we created a few lines earlier.
   svg.selectAll('g.y.axis').call(yAxis);
   svg.selectAll('g.x.axis').call(xAxis);
@@ -340,13 +351,16 @@ function showSingleTeamGraph(data) {
 
   // this is the chart label
   svg.append('text')
-    .text(`${data[0].team_name} 2015 Draft Results`)
+    .text(`2015 Draft Results: ${data[0].team_name}`)
     .attr('class', 'title')
     .attr('text-anchor', 'start')
     .attr('x', 0)
     .attr('y', 0 - (margins.top / 1.75));
 
-  // now, we can get down to the data part, and drawing stuff. We are telling D3 that all nodes (g elements with class node) will have data attached to them. The 'key' we use (to let D3 know the uniqueness of items) will be the name. Not usually a great key, but fine for this example.
+  // now, we can get down to the data part, and drawing stuff.
+  // We are telling D3 that all nodes (g elements with class node)
+  // will have data attached to them.
+  // The 'key' we use (to let D3 know the uniqueness of items) will be the name.
   let node = svg.selectAll('g.node')
     .data(data, function (d) {
       return d.player_name;
@@ -390,13 +404,14 @@ function showSingleTeamGraph(data) {
       .duration(500)
       .style('opacity', .9);
     div.html(
-      `<br/><img class="card-img" src="${d.img_url}"></img>
-      <div class="card player">${d.player_name}</div>
+      `<div class="card-title">Player Details</div>
+      <img class="card-img" src="${d.img_url}"></img>
+      <div class="card-player">${d.player_name}, ${d.position}</div>
       <div class="card-details">${d.nfl_team}</div>
       <div class="card-details">${d.uniform_num}</div>`
       )
-      .style('left', `${(width + margins.right + margins.left)}px`)
-      .style('bottom', `${(height - margins.top - margins.bottom)}px`);
+      .style('left', `${(d3.event.pageX - 175)}px`)
+      .style('top', `${(d3.event.pageY)}px`);
   });
 
   dataElement.on('mouseout', function(d) {

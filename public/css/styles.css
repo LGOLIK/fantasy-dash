@@ -89,8 +89,8 @@ div.tooltip {
 div.summary-tooltip {
   position: absolute;
   text-align: center;
-  width: 150px;
-  height: 200px;
+  width: 375px;
+  /*height: 400px;*/
   padding: 2px;
   background: #DCDCDC;
   border: 0px;
